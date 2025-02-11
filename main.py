@@ -2,7 +2,7 @@ import sys
 import requests
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QMainWindow
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtGui import QPixmap, QKeyEvent
 
 
 class AppMapAPI(QMainWindow):
@@ -14,24 +14,48 @@ class AppMapAPI(QMainWindow):
         self.coords = ','.join(reversed(self.lineEdit.text().split(', ')))
         self.z = 12
         self.pushButton.clicked.connect(self.GetCoord)
+        self.lineEdit.keyPressEventOld = self.lineEdit.keyPressEvent
+        self.lineEdit.keyPressEvent = self.LEPressEvent
 
     def GetCoord(self):
         self.coords = ','.join(reversed(self.lineEdit.text().split(', ')))
-        self.GetMap(12)
+        self.GetMap()
 
-    def GetMap(self, z):
-        map_params = {"ll": self.coords, 'size': '400,400', 'z': z, "apikey": self.map_api_key}
+    def GetMap(self):
+        map_params = {"ll": self.coords, 'size': '400,400', 'z': self.z, "apikey": self.map_api_key}
         map_response = requests.get(self.map_api_server, params=map_params)
         f = open('bufer.png', 'wb+').write(map_response.content)
         self.imageLabel.setPixmap(QPixmap('bufer.png'))
 
+    def LEPressEvent(self, event: QKeyEvent):
+        self.lineEdit.keyPressEventOld(event)
+        self.keyPressEvent(event)
+
     def keyPressEvent(self, event):
         if event.key() == 16777239 and self.z > 0:
             self.z -= 1
-            self.GetMap(self.z)
+            self.GetMap()
         elif event.key() == 16777238 and self.z < 21:
             self.z += 1
-            self.GetMap(self.z)
+            self.GetMap()
+        elif event.key() == 16777234:
+            self.coords = f"{float(self.coords.split(',')[0]) - 0.5},{self.coords.split(',')[1]}"
+            self.lineEdit.setText(', '.join(reversed(self.coords.split(','))))
+            self.GetMap()
+        elif event.key() == 16777235:
+            self.coords = f"{self.coords.split(',')[0]},{float(self.coords.split(',')[1]) + 0.25}"
+            self.lineEdit.setText(', '.join(reversed(self.coords.split(','))))
+            self.GetMap()
+        elif event.key() == 16777236:
+            self.coords = f"{float(self.coords.split(',')[0]) + 0.5},{self.coords.split(',')[1]}"
+            self.lineEdit.setText(', '.join(reversed(self.coords.split(','))))
+            self.GetMap()
+        elif event.key() == 16777237:
+            self.coords = f"{self.coords.split(',')[0]},{float(self.coords.split(',')[1]) - 0.25}"
+            self.lineEdit.setText(', '.join(reversed(self.coords.split(','))))
+            self.GetMap()
+        else:
+            print(event.key())
 
 
 def except_hook(cls, exception, traceback):
