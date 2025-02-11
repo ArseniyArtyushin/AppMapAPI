@@ -11,15 +11,27 @@ class AppMapAPI(QMainWindow):
         uic.loadUi('main.ui', self)
         self.map_api_server = "https://static-maps.yandex.ru/v1"
         self.map_api_key = "f3a0fe3a-b07e-4840-a1da-06f18b2ddf13"
-        self.pushButton.clicked.connect(self.GetMap)
+        self.coords = ','.join(reversed(self.lineEdit.text().split(', ')))
+        self.z = 12
+        self.pushButton.clicked.connect(self.GetCoord)
 
-    def GetMap(self):
-        coordinates = ','.join(reversed(self.lineEdit.text().split(', ')))
-        map_params = {"ll": coordinates, "z": '12', "apikey": self.map_api_key}
+    def GetCoord(self):
+        self.coords = ','.join(reversed(self.lineEdit.text().split(', ')))
+        self.GetMap(12)
+
+    def GetMap(self, z):
+        map_params = {"ll": self.coords, 'size': '400,400', 'z': z, "apikey": self.map_api_key}
         map_response = requests.get(self.map_api_server, params=map_params)
-        print(map_response)
         f = open('bufer.png', 'wb+').write(map_response.content)
         self.imageLabel.setPixmap(QPixmap('bufer.png'))
+
+    def keyPressEvent(self, event):
+        if event.key() == 16777239 and self.z > 0:
+            self.z -= 1
+            self.GetMap(self.z)
+        elif event.key() == 16777238 and self.z < 21:
+            self.z += 1
+            self.GetMap(self.z)
 
 
 def except_hook(cls, exception, traceback):

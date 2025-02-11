@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>521</width>
-    <height>680</height>
+    <width>422</width>
+    <height>533</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>AppMapAPI</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="imageLabel">
@@ -19,8 +19,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>500</width>
-      <height>500</height>
+      <width>400</width>
+      <height>400</height>
      </rect>
     </property>
     <property name="text">
@@ -31,17 +31,20 @@
     <property name="geometry">
      <rect>
       <x>180</x>
-      <y>530</y>
-      <width>331</width>
+      <y>430</y>
+      <width>231</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="text">
+     <string>53.198968, 50.118271</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_coord">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>530</y>
+      <y>430</y>
       <width>151</width>
       <height>31</height>
      </rect>
@@ -61,9 +64,9 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>12</x>
-      <y>580</y>
-      <width>491</width>
+      <x>10</x>
+      <y>480</y>
+      <width>401</width>
       <height>41</height>
      </rect>
     </property>
@@ -78,17 +81,6 @@
     </property>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>521</width>
-     <height>26</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
