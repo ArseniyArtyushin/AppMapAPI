@@ -13,22 +13,30 @@ class AppMapAPI(QMainWindow):
         self.map_api_key = "f3a0fe3a-b07e-4840-a1da-06f18b2ddf13"
         self.coords = ','.join(reversed(self.lineEdit.text().split(', ')))
         self.z = 12
-        self.pushButton.clicked.connect(self.GetCoord)
-        self.lineEdit.keyPressEventOld = self.lineEdit.keyPressEvent
+        self.theme = True
         self.lineEdit.keyPressEvent = self.LEPressEvent
+        self.pushButton.clicked.connect(self.GetCoord)
+        self.pushSwitch.clicked.connect(self.ChangeTheme)
+
+    def ChangeTheme(self):
+        uic.loadUi(('main_black.ui' if self.theme else 'main.ui'), self)
+        self.theme = False if self.theme else True
+        self.GetMap()
+        self.pushButton.clicked.connect(self.GetCoord)
+        self.pushSwitch.clicked.connect(self.ChangeTheme)
 
     def GetCoord(self):
         self.coords = ','.join(reversed(self.lineEdit.text().split(', ')))
         self.GetMap()
 
     def GetMap(self):
-        map_params = {"ll": self.coords, 'size': '400,400', 'z': self.z, "apikey": self.map_api_key}
+        map_params = {"ll": self.coords, 'size': '400,400', 'z': self.z, "apikey": self.map_api_key,
+                      'theme': ('light' if self.theme else 'dark')}
         map_response = requests.get(self.map_api_server, params=map_params)
         f = open('bufer.png', 'wb+').write(map_response.content)
         self.imageLabel.setPixmap(QPixmap('bufer.png'))
 
     def LEPressEvent(self, event: QKeyEvent):
-        self.lineEdit.keyPressEventOld(event)
         self.keyPressEvent(event)
 
     def keyPressEvent(self, event):
@@ -56,6 +64,7 @@ class AppMapAPI(QMainWindow):
             self.GetMap()
         else:
             print(event.key())
+        print(True)
 
 
 def except_hook(cls, exception, traceback):
